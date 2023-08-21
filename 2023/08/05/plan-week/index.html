@@ -20,30 +20,36 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="记录｜学习｜静心">
-<meta property="og:type" content="website">
-<meta property="og:title" content="个人博客">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="一、RDD Spark RDD（弹性分布式数据集），弹性是指Spark可以通过重新计算来自动重建丢失的分区。 从本质上讲，RDD 是数据元素的不可变分布式集合，跨集群中的节点进行分区，可以与提供转换和操作的低级 API 并行操作。  Spark RDD 相关操作：官方文档 1. 为什么 Spark 中需要 RDD？RDD 解决了 MapReduce 在数据共享方面的缺点。当重用数据进行计算时，Ma">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈Spark的RDD、部署模式">
+<meta property="og:url" content="http://example.com/2023/08/05/plan-week/index.html">
 <meta property="og:site_name" content="个人博客">
-<meta property="og:description" content="记录｜学习｜静心">
+<meta property="og:description" content="一、RDD Spark RDD（弹性分布式数据集），弹性是指Spark可以通过重新计算来自动重建丢失的分区。 从本质上讲，RDD 是数据元素的不可变分布式集合，跨集群中的节点进行分区，可以与提供转换和操作的低级 API 并行操作。  Spark RDD 相关操作：官方文档 1. 为什么 Spark 中需要 RDD？RDD 解决了 MapReduce 在数据共享方面的缺点。当重用数据进行计算时，Ma">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e95908a08aaf4b4cbf3a77217f4657db~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/77fc37c88d84497eb9bf31a2b483637a~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="article:published_time" content="2023-08-05T06:44:45.000Z">
+<meta property="article:modified_time" content="2023-08-21T13:50:24.821Z">
 <meta property="article:author" content="Ming">
+<meta property="article:tag" content="Spark">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e95908a08aaf4b4cbf3a77217f4657db~tplv-k3u1fbpfcp-zoom-1.image">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2023/08/05/plan-week/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>个人博客</title>
+  <title>浅谈Spark的RDD、部署模式 | 个人博客</title>
   
 
 
@@ -141,9 +147,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -159,10 +166,9 @@
       <meta itemprop="name" content="个人博客">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/05/plan-week/" class="post-title-link" itemprop="url">浅谈Spark的RDD、部署模式</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          浅谈Spark的RDD、部署模式
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -192,7 +198,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="一、RDD"><a href="#一、RDD" class="headerlink" title="一、RDD"></a>一、RDD</h2><p> Spark RDD（弹性分布式数据集），弹性是指Spark可以通过重新计算来自动重建丢失的分区。<br> 从本质上讲，RDD 是数据元素的不可变分布式集合，跨集群中的节点进行分区，可以与提供转换和操作的低级 API 并行操作。</p>
+        <h2 id="一、RDD"><a href="#一、RDD" class="headerlink" title="一、RDD"></a>一、RDD</h2><p> Spark RDD（弹性分布式数据集），弹性是指Spark可以通过重新计算来自动重建丢失的分区。<br> 从本质上讲，RDD 是数据元素的不可变分布式集合，跨集群中的节点进行分区，可以与提供转换和操作的低级 API 并行操作。</p>
 <p> Spark RDD 相关操作：<a target="_blank" rel="noopener" href="https://spark.apache.org/docs/latest/rdd-programming-guide.html">官方文档</a></p>
 <h3 id="1-为什么-Spark-中需要-RDD？"><a href="#1-为什么-Spark-中需要-RDD？" class="headerlink" title="1. 为什么 Spark 中需要 RDD？"></a>1. 为什么 Spark 中需要 RDD？</h3><p>RDD 解决了 MapReduce 在数据共享方面的缺点。当重用数据进行计算时，MapReduce 需要写入外部存储（<a target="_blank" rel="noopener" href="https://phoenixnap.com/kb/what-is-hdfs">HDFS</a>、Cassandra、HBase 等）。作业之间的读写过程会消耗大量内存。</p>
 <p>此外，由于复制、序列化和磁盘使用量的增加，任务之间的数据共享速度很慢。</p>
@@ -226,273 +232,33 @@
 <li>Hadoop权威指南</li>
 </ol>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/Spark/" rel="tag"># Spark</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/05/plan/">
+        
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ming">
-      <meta itemprop="description" content="记录｜学习｜静心">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="个人博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/05/plan/" class="post-title-link" itemprop="url">数据库回顾</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-08-05 13:55:40 / 修改时间：14:02:39" itemprop="dateCreated datePublished" datetime="2023-08-05T13:55:40+08:00">2023-08-05</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="1-什么是元组-码-候选码-主码-外码-主属性-非主属性？"><a href="#1-什么是元组-码-候选码-主码-外码-主属性-非主属性？" class="headerlink" title="1. 什么是元组, 码, 候选码, 主码, 外码, 主属性, 非主属性？"></a>1. 什么是元组, 码, 候选码, 主码, 外码, 主属性, 非主属性？</h2><p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5f74a01469b646dd9f1de2b79334c287~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
-<p>学生成绩信息表中有（学号、姓名、性别、年龄、系别、专业等）</p>
-<h4 id="超键-码："><a href="#超键-码：" class="headerlink" title="超键&#x2F;码："></a>超键&#x2F;码：</h4><p><strong>由于学号能确定一个学生，因此学生表中含有学号的任意组合都为此表的超键</strong>。如：（学号）、（学号，姓名）、（学号，性别）等</p>
-<p>若我们假设学生的姓名唯一，没有重名的现象。</p>
-<p>学号唯一，所以是一个超键</p>
-<p>姓名唯一，所以是一个超键</p>
-<p>（姓名，性别）唯一，所以是一个超键</p>
-<p>（姓名，年龄）唯一，所以是一个超键</p>
-<p>（姓名，性别，年龄）唯一，所以是一个超键</p>
-<h3 id="候选键："><a href="#候选键：" class="headerlink" title="候选键："></a>候选键：</h3><p>学号唯一，而且<strong>没有多余属性</strong>，所以是一个候选键</p>
-<p>姓名唯一，而且没有多余属性，所以是一个候选键</p>
-<p>（姓名，性别）唯一，但是单独姓名一个属性就能确定这个人是谁，所以性别这个属性就是多余属性，所以（姓名，性别）不是候选键</p>
-<p>（姓名，年龄），（姓名，性别，年龄）同上，也不是候选键</p>
-<h3 id="主键："><a href="#主键：" class="headerlink" title="主键："></a>主键：</h3><p>主键就是候选键里面的一个，<strong>是人为规定的</strong>，例如学生表中，我们通常会让“学号”做主键，学号能唯一标识这一个元组。</p>
-<h3 id="外键"><a href="#外键" class="headerlink" title="外键"></a>外键</h3><p>外键就很简单了，假如我们还有一个教师表，每个教师都有自己的编号，假设老师编号在教师表中是主键，在学生表中它就是外键。</p>
-<h2 id="2-数据库范式了解吗"><a href="#2-数据库范式了解吗" class="headerlink" title="2. 数据库范式了解吗?"></a>2. 数据库范式了解吗?</h2><p>数据库范式有 3 种：</p>
-<ul>
-<li>1NF(第一范式)：属性不可再分。</li>
-<li>2NF(第二范式)：1NF 的基础之上，消除了非主属性对于码的部分函数依赖。</li>
-<li>3NF(第三范式)：3NF 在 2NF 的基础之上，消除了非主属性对于码的传递函数依赖</li>
-</ul>
-<h2 id="3-第二范式定义"><a href="#3-第二范式定义" class="headerlink" title="3. 第二范式定义"></a>3. 第二范式定义</h2><p>如果数据库满足以下条件，则该数据库处于第二范式：</p>
-<ul>
-<li>它是第一范式</li>
-<li>所有非键属性的功能完全依赖于主键</li>
-</ul>
-<h3 id="第二范式示例"><a href="#第二范式示例" class="headerlink" title="第二范式示例"></a>第二范式示例</h3><p>考虑以下示例：</p>
-<p align=center><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2cba006a18604596bbe5ef92677d4c1b~tplv-k3u1fbpfcp-zoom-1.image" alt="不属于第二范式的示例"  /></p>
-
-<p>该表有一个复合主键[客户ID，商店ID]。非关键属性是[购买地点]。在这种情况下，[购买地点]仅取决于[商店ID]，这只是主键的一部分。因此，该表不满足第二范式。</p>
-<p>为了使该表达到第二范式，我们将该表分成两个表，现在我们有以下内容：</p>
-<p align=center><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0466f6174ce24b15bc69fdfcd2b6d337~tplv-k3u1fbpfcp-zoom-1.image" alt="第二范式示例"  /></p>
-
-<p>我们所做的就是消除我们最初拥有的部分功能依赖。现在，在表 [TABLE_STORE] 中，列 [Purchase Location] 完全依赖于该表的主键，即 [Store ID]。</p>
-<h2 id="4-3NF-第三范式"><a href="#4-3NF-第三范式" class="headerlink" title="4. 3NF(第三范式)"></a>4. 3NF(第三范式)</h2><p>3NF 在 2NF 的基础之上，消除了非主属性对于码的传递函数依赖 。符合 3NF 要求的数据库设计，<strong>基本</strong>上解决了数据冗余过大，插入异常，修改异常，删除异常的问题。比如在关系 R(学号 , 姓名, 系名，系主任)中，学号 → 系名，系名 → 系主任，所以存在非主属性系主任对于学号的传递函数依赖，所以该表的设计，不符合 3NF 的要求。</p>
-<h2 id="5-主键和外键有什么区别"><a href="#5-主键和外键有什么区别" class="headerlink" title="5. 主键和外键有什么区别?"></a>5. 主键和外键有什么区别?</h2><p>看下面两个表：</p>
-<h3 id="人员表"><a href="#人员表" class="headerlink" title="人员表"></a>人员表</h3><table>
-<thead>
-<tr>
-<th>PersonID</th>
-<th>LastName</th>
-<th>FirstName</th>
-<th>Age</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>Hansen</td>
-<td>Ola</td>
-<td>30</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Svendson</td>
-<td>Tove</td>
-<td>23</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Pettersen</td>
-<td>Kari</td>
-<td>20</td>
-</tr>
-</tbody></table>
-<h3 id="订单表"><a href="#订单表" class="headerlink" title="订单表"></a>订单表</h3><table>
-<thead>
-<tr>
-<th>OrderID</th>
-<th>OrderNumber</th>
-<th>PersonID</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>77895</td>
-<td>3</td>
-</tr>
-<tr>
-<td>2</td>
-<td>44678</td>
-<td>3</td>
-</tr>
-<tr>
-<td>3</td>
-<td>22456</td>
-<td>2</td>
-</tr>
-<tr>
-<td>4</td>
-<td>24562</td>
-<td>1</td>
-</tr>
-</tbody></table>
-<p>请注意，“Orders”表中的“PersonID”列指向“Persons”表中的“PersonID”列。</p>
-<p>“Persons”表中的“PersonID”列是<code>PRIMARY KEY</code>“Persons”表中的。</p>
-<p>“Orders”表中的“PersonID”列是<code> FOREIGN KEY</code>“Orders”表中的 a。</p>
-<p>该<code>FOREIGN KEY</code>约束可防止将无效数据插入到外键列中，因为它必须是父表中包含的值之一。</p>
-<h2 id="6-为什么不推荐使用外键与级联？"><a href="#6-为什么不推荐使用外键与级联？" class="headerlink" title="6. 为什么不推荐使用外键与级联？"></a>6. 为什么不推荐使用外键与级联？</h2><p>对于外键和级联，阿里巴巴开发手册这样说到：</p>
-<blockquote>
-<p>【强制】不得使用外键与级联，一切外键概念必须在应用层解决。</p>
-<p>说明: 以学生和成绩的关系为例，学生表中的 student_id 是主键，那么成绩表中的 student_id 则为外键。如果更新学生表中的 student_id，同时触发成绩表中的 student_id 更新，即为级联更新。外键与级联更新适用于单机低并发，不适合分布式、高并发集群; 级联更新是强阻塞，存在数据库更新风暴的风险; 外键影响数据库的插入速度</p>
-</blockquote>
-<ol>
-<li><strong>增加了复杂性：</strong> a. 每次做 DELETE 或者 UPDATE 都必须考虑外键约束，会导致开发的时候很痛苦, 测试数据极为不方便; b. 外键的主从关系是定的，假如那天需求有变化，数据库中的这个字段根本不需要和其他表有关联的话就会增加很多麻烦。</li>
-<li><strong>对分库分表不友好</strong>：因为分库分表下外键是无法生效的。</li>
-</ol>
-<h2 id="7-drop、delete-与-truncate-区别？"><a href="#7-drop、delete-与-truncate-区别？" class="headerlink" title="7. drop、delete 与 truncate 区别？"></a>7. drop、delete 与 truncate 区别？</h2><h3 id="用法不同"><a href="#用法不同" class="headerlink" title="用法不同"></a>用法不同</h3><ul>
-<li><code>drop</code>(丢弃数据): <code>drop table 表名</code> ，直接将表都删除掉，在删除表的时候使用。</li>
-<li><code>truncate</code> (清空数据) : <code>truncate table 表名</code> ，只删除表中的数据，再插入数据的时候自增长 id 又从 1 开始，在清空表中数据的时候使用。</li>
-<li><code>delete</code>（删除数据） : <code>delete from 表名 where 列名=值</code>，删除某一行的数据，如果不加 <code>where</code> 子句和<code>truncate table 表名</code>作用类似。</li>
-</ul>
-<p><code>truncate</code> 和不带 <code>where</code>子句的 <code>delete</code>、以及 <code>drop</code> 都会删除表内的数据，但是 <strong><code>truncate</code> 和 <code>delete</code> 只删除数据不删除表的结构(定义)，执行 <code>drop</code> 语句，此表的结构也会删除，也就是执行<code>drop</code> 之后对应的表不复存在。</strong></p>
-<h3 id="属于不同的数据库语言"><a href="#属于不同的数据库语言" class="headerlink" title="属于不同的数据库语言"></a>属于不同的数据库语言</h3><p><code>truncate</code> 和 <code>drop</code> 属于 DDL(数据定义语言)语句，操作立即生效，原数据不放到 rollback segment 中，不能回滚，操作不触发 trigger。而 <code>delete</code> 语句是 DML (数据库操作语言)语句，这个操作会放到 rollback segment 中，事务提交之后才生效。</p>
-<h2 id="8-数据库设计通常分为哪几步"><a href="#8-数据库设计通常分为哪几步" class="headerlink" title="8. 数据库设计通常分为哪几步?"></a>8. 数据库设计通常分为哪几步?</h2><ol>
-<li><strong>需求分析</strong> : 分析用户的需求，包括数据、功能和性能需求。</li>
-<li><strong>概念结构设计</strong> : 主要采用 E-R 模型进行设计，包括画 E-R 图。</li>
-<li><strong>逻辑结构设计</strong> : 通过将 E-R 图转换成表，实现从 E-R 模型到关系模型的转换。</li>
-<li><strong>物理结构设计</strong> : 主要是为所设计的数据库选择合适的存储结构和存取路径。</li>
-<li><strong>数据库实施</strong> : 包括编程、测试和试运行</li>
-<li><strong>数据库的运行和维护</strong> : 系统的运行与数据库的日常维护。</li>
-</ol>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ol>
-<li><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/1256626"> 一文搞懂候选码、主码、全码、外码、主属性、主键、主关键字、非主属性清晰总结</a></li>
-</ol>
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/08/05/plan/" rel="prev" title="数据库回顾">
+      <i class="fa fa-chevron-left"></i> 数据库回顾
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/05/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ming">
-      <meta itemprop="description" content="记录｜学习｜静心">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="个人博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/05/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-05 13:29:13" itemprop="dateCreated datePublished" datetime="2023-08-05T13:29:13+08:00">2023-08-05</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
@@ -545,6 +311,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81RDD"><span class="nav-number">1.</span> <span class="nav-text">一、RDD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88-Spark-%E4%B8%AD%E9%9C%80%E8%A6%81-RDD%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">1. 为什么 Spark 中需要 RDD？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Spark-RDD-%E6%93%8D%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">2. Spark RDD 操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81RDD-%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">2、RDD 持久化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81RDD%E7%9A%84cache%E5%92%8Cpersist%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">4.</span> <span class="nav-text">3、RDD的cache和persist的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%89%A7%E8%A1%8C%E5%99%A8%E5%92%8C%E9%9B%86%E7%BE%A4%E7%AE%A1%E7%90%86%E5%99%A8"><span class="nav-number">5.</span> <span class="nav-text">二、执行器和集群管理器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E8%BF%90%E8%A1%8C%E5%9C%A8YARN%E4%B8%8A%E7%9A%84Spark"><span class="nav-number">6.</span> <span class="nav-text">三、运行在YARN上的Spark</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-YARN%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.1.</span> <span class="nav-text">1. YARN客户端模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-YARN%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.2.</span> <span class="nav-text">2. YARN集群模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">6.3.</span> <span class="nav-text">参考链接</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
